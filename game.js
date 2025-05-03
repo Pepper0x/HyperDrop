@@ -1,4 +1,8 @@
 
+// Load background image
+const backgroundImg = new Image();
+backgroundImg.src = 'assets/hyperdrop_background.png';
+
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -72,6 +76,7 @@ function createPiece() {
 // Draw the board
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 
     for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
@@ -128,10 +133,10 @@ function drop() {
 }
 
 
+
 function sweep() {
     for (let y = ROWS - 1; y >= 0; y--) {
         if (grid[y].every(cell => cell !== null)) {
-            // Animate clear from left to right
             let x = 0;
             const clearInterval = setInterval(() => {
                 if (x < COLS) {
@@ -139,11 +144,13 @@ function sweep() {
                     x++;
                 } else {
                     clearInterval(clearInterval);
-                    grid.splice(y, 1);
-                    grid.unshift(Array(COLS).fill(null));
+                    setTimeout(() => {
+                        grid.splice(y, 1);
+                        grid.unshift(Array(COLS).fill(null));
+                    }, 50);
                 }
-            }, 50);  // 50ms delay between each block removal
-            break;  // Only clear one row at a time for animation
+            }, 30);
+            return; // handle one row at a time for animation
         }
     }
 }
