@@ -1,212 +1,126 @@
 
-const canvas = document.getElementById('gameCanvas');
+const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-const COLS = 10;
+
 const ROWS = 20;
+const COLS = 10;
 const BLOCK_SIZE = 32;
 
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
-const pieceKeys = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
-const SHAPES = {
-  I: [[1, 1, 1, 1]],
-  J: [[1, 0, 0], [1, 1, 1]],
-  L: [[0, 0, 1], [1, 1, 1]],
-  O: [[1, 1], [1, 1]],
-  S: [[0, 1, 1], [1, 1, 0]],
-  T: [[0, 1, 0], [1, 1, 1]],
-  Z: [[1, 1, 0], [0, 1, 1]],
+let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+
+const pieceImages = {
+    I: 'assets/I.png',
+    J: 'assets/J.png',
+    L: 'assets/L.png',
+    O: 'assets/O.png',
+    S: 'assets/S.png',
+    T: 'assets/T.png',
+    Z: 'assets/Z.png',
 };
 
-let grid = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
-let currentPiece, currentX, currentY;
-let dropCounter = 0, dropInterval = 1000, lastTime = 0;
-let backgroundImg = new Image();
-const images = {};
-let loadedCount = 0;
-let pieceBag = [];
-let gameRunning = false;
-let clearingRow = null;
-let clearStep = 0;
-let clearTimer = 0;
-let logoImg = new Image();
+const pieces = {
+    I: [[1, 1, 1, 1]],
+    J: [[1, 0, 0], [1, 1, 1]],
+    L: [[0, 0, 1], [1, 1, 1]],
+    O: [[1, 1], [1, 1]],
+    S: [[0, 1, 1], [1, 1, 0]],
+    T: [[0, 1, 0], [1, 1, 1]],
+    Z: [[1, 1, 0], [0, 1, 1]]
+};
 
-backgroundImg.src = 'assets/hyperdrop_background.png.png';
-backgroundImg.onload = assetLoaded;
+let bag = [];
+let current, x, y, fallingInterval;
 
-logoImg.src = 'https://via.placeholder.com/200x60?text=HyperDrop';
-logoImg.onload = assetLoaded;
-
-pieceKeys.forEach(key => {
-  const img = new Image();
-  img.src = `assets/${key}.png`;
-  img.onload = assetLoaded;
-  images[key] = img;
-});
-
-function assetLoaded() {
-  loadedCount++;
-  if (loadedCount === pieceKeys.length + 2) {
-    drawStartScreen();
-  }
+function newPiece() {
+    if (bag.length === 0) {
+        bag = Object.keys(pieces);
+        for (let i = bag.length - 1; i > 0; i--) {
+            [bag[i], bag[Math.floor(Math.random() * (i + 1))]] = [bag[Math.floor(Math.random() * (i + 1))], bag[i]];
+        }
+    }
+    let type = bag.pop();
+    current = { shape: pieces[type], type };
+    x = 3;
+    y = 0;
 }
 
-function drawStartScreen() {
-  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-  ctx.drawImage(logoImg, canvas.width / 2 - 100, canvas.height / 2 - 120);
-  ctx.fillStyle = 'white';
-  ctx.font = '24px Arial';
-  ctx.fillText('Click to Start', canvas.width / 2 - 60, canvas.height / 2);
-}
-
-canvas.addEventListener('click', () => {
-  if (!gameRunning) {
-    gameRunning = true;
-    refillBag();
-    spawnPiece();
-    update();
-  }
-});
-
-function refillBag() {
-  pieceBag = [...pieceKeys].sort(() => Math.random() - 0.5);
-}
-
-function getNextPieceType() {
-  if (pieceBag.length === 0) refillBag();
-  return pieceBag.pop();
-}
-
-function spawnPiece() {
-  const type = getNextPieceType();
-  const shape = SHAPES[type];
-  currentPiece = { type, shape };
-  currentX = 3;
-  currentY = 0;
-
-  if (collide(shape, currentX, currentY)) {
-    alert("Game Over");
-    grid = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
-    refillBag();
-    spawnPiece();
-  }
+function drawBlock(x, y, type) {
+    let img = new Image();
+    img.src = pieceImages[type];
+    img.onload = () => ctx.drawImage(img, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 }
 
 function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
-
-  for (let y = 0; y < ROWS; y++) {
-    for (let x = 0; x < COLS; x++) {
-      const block = grid[y][x];
-      if (block) {
-        ctx.drawImage(images[block], x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-      }
-    }
-  }
-
-  if (currentPiece) {
-    currentPiece.shape.forEach((row, y) => {
-      row.forEach((val, x) => {
-        if (val) {
-          ctx.drawImage(
-            images[currentPiece.type],
-            (currentX + x) * BLOCK_SIZE,
-            (currentY + y) * BLOCK_SIZE,
-            BLOCK_SIZE,
-            BLOCK_SIZE
-          );
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+            if (board[row][col]) drawBlock(col, row, board[row][col]);
         }
-      });
-    });
-  }
-}
-
-function update(time = 0) {
-  const deltaTime = time - lastTime;
-  lastTime = time;
-
-  if (clearingRow !== null) {
-    clearTimer += deltaTime;
-    if (clearTimer > 50) {
-      grid[clearingRow][clearStep] = null;
-      clearStep++;
-      clearTimer = 0;
     }
-    if (clearStep >= COLS) {
-      grid.splice(clearingRow, 1);
-      grid.unshift(Array(COLS).fill(null));
-      clearingRow = null;
-      clearStep = 0;
+    current.shape.forEach((r, i) =>
+        r.forEach((v, j) => {
+            if (v) drawBlock(x + j, y + i, current.type);
+        })
+    );
+}
+
+function move(dx, dy) {
+    if (!collides(x + dx, y + dy, current.shape)) {
+        x += dx;
+        y += dy;
+        draw();
+    } else if (dy) {
+        freeze();
+        clearLines();
+        newPiece();
     }
-  } else {
-    dropCounter += deltaTime;
-    if (dropCounter > dropInterval) {
-      drop();
+}
+
+function rotate() {
+    let rotated = current.shape[0].map((_, i) => current.shape.map(r => r[i])).reverse();
+    if (!collides(x, y, rotated)) current.shape = rotated;
+    draw();
+}
+
+function collides(x, y, shape) {
+    return shape.some((r, i) => r.some((v, j) => v && (board[y + i]?.[x + j] ?? 1)));
+}
+
+function freeze() {
+    current.shape.forEach((r, i) =>
+        r.forEach((v, j) => {
+            if (v) board[y + i][x + j] = current.type;
+        })
+    );
+}
+
+function clearLines() {
+    for (let r = ROWS - 1; r >= 0; r--) {
+        if (board[r].every(v => v)) {
+            for (let i = r; i > 0; i--) board[i] = [...board[i - 1]];
+            board[0] = Array(COLS).fill(null);
+            r++;
+        }
     }
-  }
-
-  draw();
-  if (gameRunning) {
-    requestAnimationFrame(update);
-  }
-}
-
-function collide(shape, offsetX, offsetY) {
-  return shape.some((row, y) =>
-    row.some((val, x) => {
-      if (!val) return false;
-      const newY = y + offsetY;
-      const newX = x + offsetX;
-      return newY >= ROWS || newX < 0 || newX >= COLS || grid[newY][newX] !== null;
-    })
-  );
-}
-
-function merge() {
-  currentPiece.shape.forEach((row, y) => {
-    row.forEach((val, x) => {
-      if (val) {
-        grid[currentY + y][currentX + x] = currentPiece.type;
-      }
-    });
-  });
-}
-
-function sweep() {
-  for (let y = ROWS - 1; y >= 0; y--) {
-    if (grid[y].every(cell => cell !== null)) {
-      clearingRow = y;
-      clearStep = 0;
-      clearTimer = 0;
-      break;
-    }
-  }
-}
-
-function drop() {
-  if (!collide(currentPiece.shape, currentX, currentY + 1)) {
-    currentY++;
-  } else {
-    merge();
-    sweep();
-    spawnPiece();
-  }
-  dropCounter = 0;
 }
 
 document.addEventListener('keydown', e => {
-  if (!currentPiece || !gameRunning) return;
-  if (e.key === 'ArrowLeft' && !collide(currentPiece.shape, currentX - 1, currentY)) currentX--;
-  if (e.key === 'ArrowRight' && !collide(currentPiece.shape, currentX + 1, currentY)) currentX++;
-  if (e.key === 'ArrowDown') drop();
-  if (e.code === 'Space') {
-    const rotated = rotate(currentPiece.shape);
-    if (!collide(rotated, currentX, currentY)) currentPiece.shape = rotated;
-  }
+    if (e.key === 'ArrowLeft') move(-1, 0);
+    else if (e.key === 'ArrowRight') move(1, 0);
+    else if (e.key === 'ArrowDown') move(0, 1);
+    else if (e.key === ' ') rotate();
 });
 
-function rotate(matrix) {
-  return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
+document.getElementById('startButton').onclick = () => {
+    document.getElementById('startScreen').style.display = 'none';
+    startGame();
+};
+
+function startGame() {
+    newPiece();
+    fallingInterval = setInterval(() => move(0, 1), 500);
+    draw();
 }
