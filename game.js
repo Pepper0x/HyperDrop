@@ -127,15 +127,26 @@ function drop() {
     dropCounter = 0;
 }
 
+
 function sweep() {
     for (let y = ROWS - 1; y >= 0; y--) {
         if (grid[y].every(cell => cell !== null)) {
-            grid.splice(y, 1);
-            grid.unshift(Array(COLS).fill(null));
+            // Animate clear from left to right
+            let x = 0;
+            const clearInterval = setInterval(() => {
+                if (x < COLS) {
+                    grid[y][x] = null;
+                    x++;
+                } else {
+                    clearInterval(clearInterval);
+                    grid.splice(y, 1);
+                    grid.unshift(Array(COLS).fill(null));
+                }
+            }, 50);  // 50ms delay between each block removal
+            break;  // Only clear one row at a time for animation
         }
     }
 }
-
 function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
@@ -170,3 +181,50 @@ function startGame() {
     currentPiece = createPiece();
     update();
 }
+
+// --- Mobile Controls ---
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let touchStartTime = 0;
+
+canvas.addEventListener("touchstart", (e) => {
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+  touchStartTime = Date.now();
+});
+
+canvas.addEventListener("touchend", (e) => {
+  const dx = touchEndX - touchStartX;
+  const dy = touchEndY - touchStartY;
+  const time = Date.now() - touchStartTime;
+
+  if (Math.abs(dx) < 10 && Math.abs(dy) < 10) {
+    // Tap to rotate
+    const rotated = rotate(currentPiece.shape);
+    if (!collide(rotated, currentX, currentY)) {
+        currentPiece.shape = rotated;
+    }
+    return;
+  }
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 30) {
+      if (!collide(currentPiece.shape, currentX + 1, currentY)) currentX++;
+    } else if (dx < -30) {
+      if (!collide(currentPiece.shape, currentX - 1, currentY)) currentX--;
+    }
+  } else {
+    if (dy > 30) {
+      drop();
+    }
+  }
+});
+
+canvas.addEventListener("touchmove", (e) => {
+  const touch = e.touches[0];
+  touchEndX = touch.clientX;
+  touchEndY = touch.clientY;
+});
