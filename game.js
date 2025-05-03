@@ -29,6 +29,22 @@ pieceKeys.forEach(key => {
 // Game grid
 const grid = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 
+// 7-bag system
+let pieceBag = [];
+function refillBag() {
+    pieceBag = [...pieceKeys].sort(() => Math.random() - 0.5);
+}
+
+function getNextPieceType() {
+    if (pieceBag.length === 0) refillBag();
+    return pieceBag.pop();
+}
+
+// Rotation helper
+function rotate(matrix) {
+    return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
+}
+
 let currentPiece = null;
 let currentX = 3;
 let currentY = 0;
@@ -49,7 +65,7 @@ const SHAPES = {
 
 // Create a new piece
 function createPiece() {
-    const type = pieceKeys[Math.floor(Math.random() * pieceKeys.length)];
+    const type = getNextPieceType();
     return { shape: SHAPES[type], type };
 }
 
@@ -57,7 +73,6 @@ function createPiece() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw grid
     for (let y = 0; y < ROWS; y++) {
         for (let x = 0; x < COLS; x++) {
             const block = grid[y][x];
@@ -67,7 +82,6 @@ function draw() {
         }
     }
 
-    // Draw current piece
     if (currentPiece) {
         currentPiece.shape.forEach((row, y) => {
             row.forEach((val, x) => {
@@ -79,7 +93,6 @@ function draw() {
     }
 }
 
-// Collision detection
 function collide(shape, offsetX, offsetY) {
     return shape.some((row, y) =>
         row.some((val, x) =>
@@ -88,7 +101,6 @@ function collide(shape, offsetX, offsetY) {
     );
 }
 
-// Merge piece into grid
 function merge() {
     currentPiece.shape.forEach((row, y) => {
         row.forEach((val, x) => {
@@ -99,7 +111,6 @@ function merge() {
     });
 }
 
-// Move piece down
 function drop() {
     if (!collide(currentPiece.shape, currentX, currentY + 1)) {
         currentY++;
@@ -116,7 +127,6 @@ function drop() {
     dropCounter = 0;
 }
 
-// Remove full rows
 function sweep() {
     for (let y = ROWS - 1; y >= 0; y--) {
         if (grid[y].every(cell => cell !== null)) {
@@ -126,7 +136,6 @@ function sweep() {
     }
 }
 
-// Game loop
 function update(time = 0) {
     const deltaTime = time - lastTime;
     lastTime = time;
@@ -141,7 +150,6 @@ function update(time = 0) {
     requestAnimationFrame(update);
 }
 
-// Controls
 document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') {
         if (!collide(currentPiece.shape, currentX - 1, currentY)) currentX--;
@@ -149,11 +157,16 @@ document.addEventListener('keydown', e => {
         if (!collide(currentPiece.shape, currentX + 1, currentY)) currentX++;
     } else if (e.key === 'ArrowDown') {
         drop();
+    } else if (e.code === 'Space') {
+        const rotated = rotate(currentPiece.shape);
+        if (!collide(rotated, currentX, currentY)) {
+            currentPiece.shape = rotated;
+        }
     }
 });
 
-// Start the game
 function startGame() {
+    refillBag();
     currentPiece = createPiece();
     update();
 }
