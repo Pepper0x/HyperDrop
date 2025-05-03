@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 const COLS = 10;
 const ROWS = 20;
 const BLOCK_SIZE = 32;
+
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
@@ -24,12 +25,11 @@ let dropCounter = 0, dropInterval = 1000, lastTime = 0;
 let backgroundImg = new Image();
 const images = {};
 let loadedCount = 0;
+let pieceBag = [];
 
-// Load background
 backgroundImg.src = 'assets/hyperdrop_background.png.png';
 backgroundImg.onload = assetLoaded;
 
-// Load piece images
 pieceKeys.forEach(key => {
   const img = new Image();
   img.src = `assets/${key}.png`;
@@ -46,22 +46,39 @@ function assetLoaded() {
 
 function startGame() {
   console.log("Game starting...");
+  refillBag();
   spawnPiece();
   update();
 }
 
+function refillBag() {
+  pieceBag = [...pieceKeys].sort(() => Math.random() - 0.5);
+}
+
+function getNextPieceType() {
+  if (pieceBag.length === 0) refillBag();
+  return pieceBag.pop();
+}
+
 function spawnPiece() {
-  const type = pieceKeys[Math.floor(Math.random() * pieceKeys.length)];
-  currentPiece = { type, shape: SHAPES[type] };
+  const type = getNextPieceType();
+  const shape = SHAPES[type];
+  currentPiece = { type, shape };
   currentX = 3;
   currentY = 0;
+
+  if (collide(shape, currentX, currentY)) {
+    alert("Game Over");
+    grid = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+    refillBag();
+    spawnPiece();
+  }
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
 
-  // Draw grid
   for (let y = 0; y < ROWS; y++) {
     for (let x = 0; x < COLS; x++) {
       const block = grid[y][x];
@@ -71,7 +88,6 @@ function draw() {
     }
   }
 
-  // Draw current piece
   if (currentPiece) {
     currentPiece.shape.forEach((row, y) => {
       row.forEach((val, x) => {
@@ -123,17 +139,28 @@ function merge() {
   });
 }
 
+function sweep() {
+  outer: for (let y = ROWS - 1; y >= 0; y--) {
+    for (let x = 0; x < COLS; x++) {
+      if (!grid[y][x]) continue outer;
+    }
+    const row = grid.splice(y, 1)[0].fill(null);
+    grid.unshift(row);
+    y++;
+  }
+}
+
 function drop() {
   if (!collide(currentPiece.shape, currentX, currentY + 1)) {
     currentY++;
   } else {
     merge();
+    sweep();
     spawnPiece();
   }
   dropCounter = 0;
 }
 
-// Controls
 document.addEventListener('keydown', e => {
   if (!currentPiece) return;
   if (e.key === 'ArrowLeft' && !collide(currentPiece.shape, currentX - 1, currentY)) currentX--;
