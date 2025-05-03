@@ -26,9 +26,17 @@ let backgroundImg = new Image();
 const images = {};
 let loadedCount = 0;
 let pieceBag = [];
+let gameRunning = false;
+let clearingRow = null;
+let clearStep = 0;
+let clearTimer = 0;
+let logoImg = new Image();
 
 backgroundImg.src = 'assets/hyperdrop_background.png.png';
 backgroundImg.onload = assetLoaded;
+
+logoImg.src = 'https://via.placeholder.com/200x60?text=HyperDrop';
+logoImg.onload = assetLoaded;
 
 pieceKeys.forEach(key => {
   const img = new Image();
@@ -39,17 +47,27 @@ pieceKeys.forEach(key => {
 
 function assetLoaded() {
   loadedCount++;
-  if (loadedCount === pieceKeys.length + 1) {
-    startGame();
+  if (loadedCount === pieceKeys.length + 2) {
+    drawStartScreen();
   }
 }
 
-function startGame() {
-  console.log("Game starting...");
-  refillBag();
-  spawnPiece();
-  update();
+function drawStartScreen() {
+  ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(logoImg, canvas.width / 2 - 100, canvas.height / 2 - 120);
+  ctx.fillStyle = 'white';
+  ctx.font = '24px Arial';
+  ctx.fillText('Click to Start', canvas.width / 2 - 60, canvas.height / 2);
 }
+
+canvas.addEventListener('click', () => {
+  if (!gameRunning) {
+    gameRunning = true;
+    refillBag();
+    spawnPiece();
+    update();
+  }
+});
 
 function refillBag() {
   pieceBag = [...pieceKeys].sort(() => Math.random() - 0.5);
@@ -108,14 +126,31 @@ function draw() {
 function update(time = 0) {
   const deltaTime = time - lastTime;
   lastTime = time;
-  dropCounter += deltaTime;
 
-  if (dropCounter > dropInterval) {
-    drop();
+  if (clearingRow !== null) {
+    clearTimer += deltaTime;
+    if (clearTimer > 50) {
+      grid[clearingRow][clearStep] = null;
+      clearStep++;
+      clearTimer = 0;
+    }
+    if (clearStep >= COLS) {
+      grid.splice(clearingRow, 1);
+      grid.unshift(Array(COLS).fill(null));
+      clearingRow = null;
+      clearStep = 0;
+    }
+  } else {
+    dropCounter += deltaTime;
+    if (dropCounter > dropInterval) {
+      drop();
+    }
   }
 
   draw();
-  requestAnimationFrame(update);
+  if (gameRunning) {
+    requestAnimationFrame(update);
+  }
 }
 
 function collide(shape, offsetX, offsetY) {
@@ -140,13 +175,13 @@ function merge() {
 }
 
 function sweep() {
-  outer: for (let y = ROWS - 1; y >= 0; y--) {
-    for (let x = 0; x < COLS; x++) {
-      if (!grid[y][x]) continue outer;
+  for (let y = ROWS - 1; y >= 0; y--) {
+    if (grid[y].every(cell => cell !== null)) {
+      clearingRow = y;
+      clearStep = 0;
+      clearTimer = 0;
+      break;
     }
-    const row = grid.splice(y, 1)[0].fill(null);
-    grid.unshift(row);
-    y++;
   }
 }
 
@@ -162,7 +197,7 @@ function drop() {
 }
 
 document.addEventListener('keydown', e => {
-  if (!currentPiece) return;
+  if (!currentPiece || !gameRunning) return;
   if (e.key === 'ArrowLeft' && !collide(currentPiece.shape, currentX - 1, currentY)) currentX--;
   if (e.key === 'ArrowRight' && !collide(currentPiece.shape, currentX + 1, currentY)) currentX++;
   if (e.key === 'ArrowDown') drop();
