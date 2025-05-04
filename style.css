@@ -132,3 +132,11 @@ html, body {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
 }
+
+#gameWrapper {
+  touch-action: none;
+  -ms-touch-action: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  overscroll-behavior: contain;
+}

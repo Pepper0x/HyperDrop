@@ -255,3 +255,12 @@ document.addEventListener('touchstart', function (e) {
   }
   lastTouchTime = now;
 }, { passive: false });
+
+let lastTap = 0;
+document.getElementById('gameWrapper').addEventListener('touchend', function(e) {
+  const now = new Date().getTime();
+  if (now - lastTap < 400) {
+    e.preventDefault();
+  }
+  lastTap = now;
+}, { passive: false });
