@@ -155,6 +155,7 @@ function endGame() {
 
 
 
+
 document.addEventListener("keydown", e => {
   if (!gameRunning) return;
 
@@ -177,13 +178,28 @@ document.addEventListener("keydown", e => {
       }
     }
     lastDrop = Date.now();
-  } else if (e.key === "ArrowUp" || e.key === " ") {
+  } else if (e.key === " ") {
     const rotated = rotate(currentPiece.shape);
     const prev = currentPiece.shape;
     currentPiece.shape = rotated;
     if (collide(currentPiece)) currentPiece.shape = prev;
+  } else if (e.key === "ArrowUp") {
+    // HARD DROP
+    while (!collide(currentPiece)) {
+      currentPiece.y++;
+    }
+    currentPiece.y--;
+    merge(currentPiece);
+    clearLines();
+    currentPiece = nextPiece();
+    if (collide(currentPiece)) {
+      gameRunning = false;
+      endGame();
+    }
+    lastDrop = Date.now();
   }
 });
+
 
 
 
