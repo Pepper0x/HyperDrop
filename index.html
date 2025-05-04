@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
   <title>Hyperdrop</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
   <div id="startScreen" class="overlay">
     <h1>Hyperdrop</h1>
@@ -14,12 +12,12 @@
     <button onclick="startGame()">Start Game</button>
     <button onclick="showLeaderboard()">View Leaderboard</button>
   </div>
-
   <div id="leaderboardScreen" class="overlay hidden">
     <h2>Top Scores</h2>
     <ol id="leaderboardList"></ol>
     <button onclick="hideLeaderboard()">Back</button>
   </div>
-
   <canvas id="gameCanvas" width="300" height="600" class="hidden"></canvas>
+  <script src="game.js"></script>
 </body>
+</html>
