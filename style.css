@@ -13,8 +13,10 @@ html, body {
 
 #gameContainer {
   width: 100%;
-  max-width: 420px;
-  background: url('assets/hyperdrop_background.png') center center / cover no-repeat;
+  max-width: 400px;
+  max-height: 640px;
+  height: 100%;
+  background: url('assets/hyperdrop_background.png') center center / contain no-repeat;
   border: 4px solid #222;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.5);
@@ -23,6 +25,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 canvas {
@@ -78,4 +81,9 @@ canvas {
   border-radius: 8px;
   color: #000;
   display: none;
+}
+
+#scoreboardView {
+  max-width: 400px;
+  width: 100%;
 }
