@@ -278,8 +278,14 @@ bindControl("btnRotate", () => rotatePiece());
 bindControl("btnSoftDrop", () => drop());
 bindControl("btnHardDrop", () => hardDrop());
 
-// Start menu and leaderboard logic
+// Menu functionality
 function startGame() {
+  const nameInput = document.getElementById("playerName");
+  if (!nameInput.value.trim()) {
+    alert("Please enter your name.");
+    return;
+  }
+  localStorage.setItem("currentPlayer", nameInput.value.trim());
   document.getElementById("startScreen").classList.add("hidden");
   gameInit();
 }
