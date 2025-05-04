@@ -4,11 +4,11 @@ const ctx = canvas.getContext("2d");
 
 const BLOCK_SIZE = 32;
 const COLS = 10;
-const ROWS = 19;
+const ROWS = 20;
 const PLAYABLE_ROWS = 19;
 
 canvas.width = COLS * BLOCK_SIZE;
-canvas.height = 608;
+canvas.height = 640;
 
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 const pieces = {
