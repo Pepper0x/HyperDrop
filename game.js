@@ -129,9 +129,10 @@ function update(time = 0) {
   requestAnimationFrame(update);
 }
 
+
 function drop() {
   currentPiece.y++;
-  if (collide(board, currentPiece)) {
+  if (collide(board, currentPiece) || currentPiece.y + currentPiece.shape.length > PLAYABLE_ROWS) {
     currentPiece.y--;
     merge(board, currentPiece);
     clearRows();
@@ -143,6 +144,10 @@ function drop() {
       gameRunning = false;
       return;
     }
+  }
+  dropCounter = 0;
+}
+
   }
   dropCounter = 0;
 }
