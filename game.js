@@ -1,14 +1,4 @@
 
-function drawNextPiece() {
-  const offsetX = canvas.width - 96;
-  const offsetY = 10;
-  nextPiece.shape.forEach((row, y) => {
-    row.forEach((val, x) => {
-      if (val) ctx.drawImage(images[nextPiece.type], offsetX + x * 20, offsetY + y * 20, 20, 20);
-    });
-  });
-}
-
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -21,7 +11,6 @@ canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
-
 const pieces = {
   I: [[1, 1, 1, 1]],
   J: [[1, 0, 0], [1, 1, 1]],
@@ -77,7 +66,7 @@ function merge(board, piece) {
 
 function clearRows() {
   let lines = 0;
-  outer: for (let y = board.length - 1; y >= 0; y--) {
+  for (let y = board.length - 2; y >= 0; y--) {
     if (board[y].every(cell => cell)) {
       board.splice(y, 1);
       board.unshift(Array(COLS).fill(null));
@@ -85,14 +74,14 @@ function clearRows() {
       y++;
     }
   }
-  if (lines > 0) 
-  score += lines * 100;
-  linesCleared += lines;
-  level = Math.floor(linesCleared / 5) + 1;
-  dropInterval = Math.max(200, 1000 - (level - 1) * 100);
-  document.getElementById("scoreText").innerText = "Score: " + score;
-  document.getElementById("levelText").innerText = "Level: " + level;
-
+  if (lines > 0) {
+    score += lines * 100;
+    linesCleared += lines;
+    level = Math.floor(linesCleared / 5) + 1;
+    dropInterval = Math.max(200, 1000 - (level - 1) * 100);
+    document.getElementById("scoreText").innerText = "Score: " + score;
+    document.getElementById("levelText").innerText = "Level: " + level;
+  }
 }
 
 function rotate(matrix) {
@@ -116,20 +105,28 @@ function drawBoard() {
   });
 }
 
+function drawNextPiece() {
+  const offsetX = canvas.width - 96;
+  const offsetY = 10;
+  nextPiece.shape.forEach((row, y) => {
+    row.forEach((val, x) => {
+      if (val) ctx.drawImage(images[nextPiece.type], offsetX + x * 20, offsetY + y * 20, 20, 20);
+    });
+  });
+}
+
 function update(time = 0) {
   const delta = time - lastTime;
   lastTime = time;
   dropCounter += delta;
-  if (dropCounter > dropInterval && currentPiece.y + currentPiece.shape.length < PLAYABLE_ROWS) {
+  if (dropCounter > dropInterval) {
     drop();
   }
   drawBoard();
   drawMatrix(currentPiece.shape, { x: currentPiece.x, y: currentPiece.y }, currentPiece.type);
-  if (gameRunning) drawNextPiece();
-  requestAnimationFrame(update);
+  drawNextPiece();
+  if (gameRunning) requestAnimationFrame(update);
 }
-
-
 
 function drop() {
   currentPiece.y++;
@@ -145,14 +142,6 @@ function drop() {
       showGameOverPopup();
       return;
     }
-  }
-  dropCounter = 0;
-}
-
-  }
-  dropCounter = 0;
-}
-
   }
   dropCounter = 0;
 }
@@ -180,7 +169,11 @@ function startGame() {
   currentPiece = createPiece(randomType());
   nextPiece = createPiece(randomType());
   score = 0;
+  level = 1;
+  linesCleared = 0;
   gameRunning = true;
+  document.getElementById("scoreText").innerText = "Score: 0";
+  document.getElementById("levelText").innerText = "Level: 1";
   document.getElementById("gameOverPopup")?.remove();
   update();
 }
