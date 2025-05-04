@@ -259,3 +259,60 @@ document.addEventListener("keydown", event => {
     playerRotate(1);
   }
 });
+
+
+function drawBackgroundGrid() {
+  context.fillStyle = "#000";
+  context.fillRect(0, 0, canvas.width, canvas.height - 30);  // Leave space for score bar
+  context.strokeStyle = "rgba(255,255,255,0.05)";
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      context.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+    }
+  }
+  // Draw score bar
+  context.fillStyle = "#111";
+  context.fillRect(0, canvas.height - 30, canvas.width, 30);
+  context.fillStyle = "#fff";
+  context.font = "16px Arial";
+  context.fillText("SCORE: " + score, 10, canvas.height - 10);
+}
+
+let score = 0;
+
+function merge(matrix, player) {
+  player.matrix.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== 0) {
+        matrix[y + player.pos.y][x + player.pos.x] = value;
+        score += 1;
+      }
+    });
+  });
+}
+
+function draw() {
+  drawBackgroundGrid();
+  drawMatrix(arena, {x: 0, y: 0});
+  drawMatrix(player.matrix, player.pos);
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key === "ArrowLeft") {
+    playerMove(-1);
+  } else if (event.key === "ArrowRight") {
+    playerMove(1);
+  } else if (event.key === "ArrowDown") {
+    playerDrop();
+  } else if (event.key === "ArrowUp") {
+    while (!collide(arena, player)) {
+      player.pos.y++;
+    }
+    player.pos.y--;
+    merge(arena, player);
+    playerReset();
+    dropCounter = 0;
+  } else if (event.code === "Space") {
+    playerRotate(1);
+  }
+});
