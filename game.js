@@ -234,12 +234,22 @@ function gameInit() {
   update();
 }
 
+
 document.addEventListener("keydown", event => {
-  if (event.key === "ArrowLeft") playerMove(-1);
-  else if (event.key === "ArrowRight") playerMove(1);
-  else if (event.key === "ArrowDown") playerDrop();
-  else if (event.key === "ArrowUp") {
-    while (!collide(arena, player)) player.pos.y++;
+  if (event.key === "ArrowLeft") {
+    playerMove(-1);
+  } else if (event.key === "ArrowRight") {
+    playerMove(1);
+  } else if (event.key === "ArrowDown") {
+    player.pos.y++;
+    if (collide(arena, player)) {
+      player.pos.y--;
+    }
+    dropCounter = 0;
+  } else if (event.key === "ArrowUp") {
+    while (!collide(arena, player)) {
+      player.pos.y++;
+    }
     player.pos.y--;
     merge(arena, player);
     playerReset();
