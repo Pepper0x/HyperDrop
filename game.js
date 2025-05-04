@@ -264,3 +264,16 @@ document.getElementById('gameWrapper').addEventListener('touchend', function(e) 
   }
   lastTap = now;
 }, { passive: false });
+
+// Add responsive touch and mouse handlers
+function bindControl(id, handler) {
+  const btn = document.getElementById(id);
+  btn.addEventListener('touchstart', (e) => { e.preventDefault(); handler(); }, { passive: false });
+  btn.addEventListener('mousedown', handler);
+}
+
+bindControl("btnLeft", () => move(-1));
+bindControl("btnRight", () => move(1));
+bindControl("btnRotate", () => rotatePiece());
+bindControl("btnSoftDrop", () => drop());
+bindControl("btnHardDrop", () => hardDrop());

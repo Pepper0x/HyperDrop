@@ -142,3 +142,19 @@ html, body {
   -webkit-touch-callout: none;
   overscroll-behavior: contain;
 }
+
+#touchControls button {
+  padding: 16px 20px;
+  font-size: 22px;
+  border-radius: 10px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  flex: 1 1 30%;
+  min-width: 60px;
+  transition: background 0.2s ease;
+}
+#touchControls button:active {
+  background-color: #777;
+}
