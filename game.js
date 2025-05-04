@@ -171,6 +171,18 @@ document.addEventListener("keydown", e => {
   }
 });
 
+document.getElementById("startBtn").addEventListener("click", () => {
+  const nameInput = document.getElementById("playerName");
+  const name = nameInput.value.trim();
+  if (name === "") {
+    alert("Enter your name to start!");
+    return;
+  }
+  localStorage.setItem("currentPlayer", name);
+  document.getElementById("startScreen").style.display = "none";
+  startGame();
+});
+
 function startGame() {
   initBoard();
   currentPiece = nextPiece();
