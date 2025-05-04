@@ -9,15 +9,36 @@
   <div id="startScreen" class="overlay">
     <h1>Hyperdrop</h1>
     <input type="text" id="playerName" placeholder="Enter your name" />
-    <button onclick="startGame()">Start Game</button>
+    <button id="startBtn">Start Game</button>
     <button onclick="showLeaderboard()">View Leaderboard</button>
   </div>
+
   <div id="leaderboardScreen" class="overlay hidden">
     <h2>Top Scores</h2>
     <ol id="leaderboardList"></ol>
     <button onclick="hideLeaderboard()">Back</button>
   </div>
+
   <canvas id="gameCanvas" width="300" height="600" class="hidden"></canvas>
+
   <script src="game.js"></script>
+  <script>
+    window.onload = () => {
+      console.log("Window loaded");
+      const startBtn = document.getElementById("startBtn");
+      startBtn.onclick = () => {
+        console.log("Start button clicked");
+        const nameInput = document.getElementById("playerName");
+        if (!nameInput.value.trim()) {
+          alert("Please enter your name.");
+          return;
+        }
+        localStorage.setItem("currentPlayer", nameInput.value.trim());
+        document.getElementById("startScreen").classList.add("hidden");
+        document.getElementById("gameCanvas").classList.remove("hidden");
+        gameInit();
+      };
+    };
+  </script>
 </body>
 </html>
