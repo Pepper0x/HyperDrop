@@ -8,7 +8,7 @@ const ROWS = 20;
 const PLAYABLE_ROWS = 19;
 
 canvas.width = COLS * BLOCK_SIZE;
-canvas.height = 640;
+canvas.height = ROWS * BLOCK_SIZE;
 
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 const pieces = {

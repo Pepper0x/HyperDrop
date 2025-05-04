@@ -158,3 +158,27 @@ html, body {
 #touchControls button:active {
   background-color: #777;
 }
+
+#touchControls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+
+#touchControls button {
+  padding: 14px 20px;
+  font-size: 20px;
+  border-radius: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+  cursor: pointer;
+  min-width: 60px;
+  transition: background 0.2s;
+}
+
+#touchControls button:active {
+  background-color: #888;
+}
