@@ -49,8 +49,7 @@ function newPiece() {
 
 function drawBlock(ctx, x, y, type, alpha = 1) {
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = colors[type];
-  ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+  let img = new Image(); img.src = `assets/${type}.png`; ctx.drawImage(img, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
   ctx.strokeStyle = "black";
   ctx.lineWidth = 1;
   ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -216,3 +215,13 @@ function renderLeaderboard() {
 }
 
 renderLeaderboard();
+
+document.getElementById("startButton").addEventListener("click", () => {
+  document.getElementById("leaderboard").style.display = "none";
+});
+
+function showStartScreen() {
+  document.getElementById("startScreen").style.display = "flex";
+  document.getElementById("leaderboard").style.display = "block";
+  renderLeaderboard();
+}
