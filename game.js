@@ -246,3 +246,12 @@ function rotatePiece() {
   if (!gameRunning) return;
   currentPiece.shape = rotate(currentPiece.shape);
 }
+
+let lastTouchTime = 0;
+document.addEventListener('touchstart', function (e) {
+  const now = new Date().getTime();
+  if (now - lastTouchTime <= 300) {
+    e.preventDefault();
+  }
+  lastTouchTime = now;
+}, { passive: false });
