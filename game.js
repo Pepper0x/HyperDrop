@@ -18,7 +18,7 @@ let pieces = {
   O: [[1,1],[1,1]], S: [[0,1,1],[1,1,0]], T: [[0,1,0],[1,1,1]], Z: [[1,1,0],[0,1,1]]
 };
 
-let bag = [], current, x, y, score = 0, playerName = "", interval;
+let bag = [], current, x, y, score = 0, playerName = "", interval, isGameOver = false;
 
 function newPiece() {
   if (bag.length === 0) {
@@ -100,6 +100,8 @@ function updateScore() {
 }
 
 function gameOver() {
+  if (isGameOver) return;
+  isGameOver = true;
   clearInterval(interval);
   alert("Game Over! Final Score: " + score);
   let lb = JSON.parse(localStorage.getItem("leaderboard") || "[]");
@@ -107,7 +109,12 @@ function gameOver() {
   lb.sort((a, b) => b.score - a.score);
   lb = lb.slice(0, 5);
   localStorage.setItem("leaderboard", JSON.stringify(lb));
-  location.reload();
+  showStartScreen();
+}
+
+function showStartScreen() {
+  document.getElementById("startScreen").style.display = "flex";
+  renderLeaderboard();
 }
 
 document.addEventListener("keydown", e => {
@@ -125,6 +132,7 @@ document.getElementById("startButton").onclick = () => {
 };
 
 function startGame() {
+  isGameOver = false;
   board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
   score = 0;
   updateScore();
