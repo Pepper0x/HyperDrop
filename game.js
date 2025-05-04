@@ -130,6 +130,7 @@ function update(time = 0) {
 }
 
 
+
 function drop() {
   currentPiece.y++;
   if (collide(board, currentPiece) || currentPiece.y + currentPiece.shape.length > PLAYABLE_ROWS) {
@@ -139,11 +140,15 @@ function drop() {
     currentPiece = nextPiece;
     nextPiece = createPiece(randomType());
     if (collide(board, currentPiece)) {
+      gameRunning = false;
       saveScore(usernameInput.value || "Player", score);
       showGameOverPopup();
-      gameRunning = false;
       return;
     }
+  }
+  dropCounter = 0;
+}
+
   }
   dropCounter = 0;
 }
