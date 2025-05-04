@@ -70,6 +70,8 @@
 </head>
 <body>
   <div id="startScreen">
+    <button id="startButton">Start Game</button>
+    <button id="scoreboardButton">View Scoreboard</button>
     <h1>Welcome to Hyperdrop</h1>
     <input type="text" id="nameInput" placeholder="Enter your name" />
     <button id="startButton">Start Game</button>
@@ -85,3 +87,9 @@
   <script src="game.js"></script>
 </body>
 </html>
+
+<div id="scoreboardView" style="display:none; text-align:center; color:white; padding:20px;">
+  <h2>Top Scores</h2>
+  <div id="leaderboard"></div>
+  <button id="backToMenuButton">Back</button>
+</div>

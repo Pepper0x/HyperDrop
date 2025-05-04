@@ -225,3 +225,22 @@ function showStartScreen() {
   document.getElementById("leaderboard").style.display = "block";
   renderLeaderboard();
 }
+
+document.getElementById("startButton").addEventListener("click", () => {
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("gameContainer").style.display = "flex";
+  document.getElementById("scoreDisplay").style.display = "block";
+  startGame();
+});
+
+document.getElementById("scoreboardButton").addEventListener("click", () => {
+  document.getElementById("startScreen").style.display = "none";
+  document.getElementById("gameContainer").style.display = "none";
+  document.getElementById("scoreboardView").style.display = "block";
+  renderLeaderboard();
+});
+
+document.getElementById("backToMenuButton").addEventListener("click", () => {
+  document.getElementById("scoreboardView").style.display = "none";
+  document.getElementById("startScreen").style.display = "flex";
+});
