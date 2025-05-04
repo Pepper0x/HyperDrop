@@ -1,5 +1,6 @@
 
 function startGame() {
+  console.log("Start button clicked");
   const nameInput = document.getElementById("playerName");
   if (!nameInput.value.trim()) {
     alert("Please enter your name.");
@@ -198,6 +199,7 @@ document.addEventListener("keydown", event => {
 });
 
 function gameInit() {
+  console.log("Game init triggered");
   playerReset();
   update();
 }
