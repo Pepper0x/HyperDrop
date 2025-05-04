@@ -6,6 +6,7 @@
   <title>Hyperdrop</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div id="startScreen" class="overlay">
     <h1>Hyperdrop</h1>
@@ -13,30 +14,12 @@
     <button onclick="startGame()">Start Game</button>
     <button onclick="showLeaderboard()">View Leaderboard</button>
   </div>
+
   <div id="leaderboardScreen" class="overlay hidden">
     <h2>Top Scores</h2>
     <ol id="leaderboardList"></ol>
     <button onclick="hideLeaderboard()">Back</button>
   </div>
 
-<div id="gameWrapper">
-  <div id="container">
-    <div id="menu">
-      <h1>Welcome to Hyperdrop</h1>
-      <input type="text" id="username" placeholder="Enter your name" />
-      </div>
-    <canvas id="gameCanvas" width="320" height="640"></canvas>
-<div id="touchControls">
-</div>
-    <div id="scoreboard" style="display:none;">
-      <h2>Top Scores</h2>
-      <ul id="scoreList"></ul>
-      </div>
-    <div id="bottomBar">
-    <span id="scoreText">Score: 0</span>
-    <span id="levelText">Level: 1</span>
-  </div>
-  <script src="game.js"></script>
-</div>
+  <canvas id="gameCanvas" width="300" height="600" class="hidden"></canvas>
 </body>
-</html>

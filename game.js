@@ -287,8 +287,10 @@ function startGame() {
   }
   localStorage.setItem("currentPlayer", nameInput.value.trim());
   document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("gameCanvas").classList.remove("hidden");
   gameInit();
 }
+
 function showLeaderboard() {
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("leaderboardScreen").classList.remove("hidden");
@@ -296,6 +298,7 @@ function showLeaderboard() {
   const list = document.getElementById("leaderboardList");
   list.innerHTML = scores.map(s => `<li>${s.name}: ${s.score}</li>`).join('');
 }
+
 function hideLeaderboard() {
   document.getElementById("leaderboardScreen").classList.add("hidden");
   document.getElementById("startScreen").classList.remove("hidden");
