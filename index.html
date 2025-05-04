@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Hyperdrop</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="startScreen" class="overlay">
     <h1>Hyperdrop</h1>
     <input type="text" id="playerName" placeholder="Enter your name" />
     <button id="startBtn">Start Game</button>
-    <button onclick="showLeaderboard()">View Leaderboard</button>
   </div>
 
   <div id="leaderboardScreen" class="overlay hidden">
@@ -19,26 +18,14 @@
     <button onclick="hideLeaderboard()">Back</button>
   </div>
 
-  <canvas id="gameCanvas" width="300" height="600" class="hidden"></canvas>
+  <div class="game-wrapper">
+    <canvas id="gameCanvas" width="300" height="600" class="hidden"></canvas>
+    <div id="nextPieceBox" class="hidden">
+      <h4>Next</h4>
+      <canvas id="nextCanvas" width="120" height="120"></canvas>
+    </div>
+  </div>
 
   <script src="game.js"></script>
-  <script>
-    window.onload = () => {
-      console.log("Window loaded");
-      const startBtn = document.getElementById("startBtn");
-      startBtn.onclick = () => {
-        console.log("Start button clicked");
-        const nameInput = document.getElementById("playerName");
-        if (!nameInput.value.trim()) {
-          alert("Please enter your name.");
-          return;
-        }
-        localStorage.setItem("currentPlayer", nameInput.value.trim());
-        document.getElementById("startScreen").classList.add("hidden");
-        document.getElementById("gameCanvas").classList.remove("hidden");
-        gameInit();
-      };
-    };
-  </script>
 </body>
 </html>

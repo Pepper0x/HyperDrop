@@ -2,33 +2,35 @@
 body {
   margin: 0;
   font-family: sans-serif;
-  background-color: #000;
+  background-color: #111;
   color: #fff;
 }
 canvas {
   display: block;
-  margin: auto;
-  background-image: url('assets/hyperdrop_background.png');
-  background-size: cover;
+  background: #000;
 }
 .overlay {
   position: fixed;
   top: 0; left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(10, 10, 20, 0.95);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 10;
+}
+.hidden { display: none; }
+
+#nextPieceBox {
+  position: absolute;
+  right: 20px;
+  top: 20px;
   color: white;
-  z-index: 9999;
+  text-align: center;
 }
-.hidden {
-  display: none;
-}
-#playerName {
-  font-size: 18px;
-  padding: 10px;
-  margin: 10px;
+#nextCanvas {
+  border: 1px solid white;
+  background: #000;
 }
