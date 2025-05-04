@@ -29,7 +29,7 @@ Object.keys(pieces).forEach(type => {
 });
 
 let currentPiece, nextPiece, dropCounter = 0, dropInterval = 1000, lastTime = 0;
-let score = 0, gameRunning = false;
+let score = 0, level = 1, linesCleared = 0, gameRunning = false;
 let topScores = [];
 
 const startBtn = document.getElementById("startBtn");
@@ -74,7 +74,14 @@ function clearRows() {
       y++;
     }
   }
-  if (lines > 0) score += lines * 100;
+  if (lines > 0) 
+  score += lines * 100;
+  linesCleared += lines;
+  level = Math.floor(linesCleared / 5) + 1;
+  dropInterval = Math.max(200, 1000 - (level - 1) * 100);
+  document.getElementById("scoreText").innerText = "Score: " + score;
+  document.getElementById("levelText").innerText = "Level: " + level;
+
 }
 
 function rotate(matrix) {
