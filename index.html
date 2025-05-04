@@ -1,95 +1,26 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hyperdrop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    html, body { overflow: hidden; max-height: 100vh; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('assets/hyperdrop_background.png') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    #startScreen {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0,0,0,0.85);
-      color: white;
-      z-index: 10;
-    }
-
-    #scoreDisplay {
-      margin-top: 10px;
-      font-size: 20px;
-      font-weight: bold;
-      color: white;
-      background: rgba(0,0,0,0.6);
-      padding: 10px 20px;
-      border-radius: 10px;
-    }
-
-    #canvasWrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 20px;
-    }
-
-    canvas {
-      border: 2px solid black;
-      margin-bottom: 10px;
-    }
-
-    #leaderboard {
-      margin-top: 10px;
-      background: rgba(255,255,255,0.85);
-      padding: 10px 20px;
-      border-radius: 10px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    #preview {
-      margin-bottom: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="startScreen">
-    <button id="startButton">Start Game</button>
-    <button id="scoreboardButton">View Scoreboard</button>
-    <h1>Welcome to Hyperdrop</h1>
-    <input type="text" id="nameInput" placeholder="Enter your name" />
-    <button id="startButton">Start Game</button>
+  <div id="container">
+    <div id="menu">
+      <h1>Welcome to Hyperdrop</h1>
+      <input type="text" id="username" placeholder="Enter your name" />
+      <button id="startBtn">Start Game</button>
+      <button id="scoreboardBtn">View Scoreboard</button>
+    </div>
+    <canvas id="gameCanvas" width="320" height="640"></canvas>
+    <div id="scoreboard" style="display:none;">
+      <h2>Top Scores</h2>
+      <ul id="scoreList"></ul>
+      <button id="backBtn">Back</button>
+    </div>
   </div>
-
-  <div id="canvasWrapper">
-    <canvas id="preview"></canvas>
-    <canvas id="game"></canvas>
-    <div id="scoreDisplay">Score: 0 | Level: 1</div>
-    <div id="leaderboard"></div>
-  </div>
-
   <script src="game.js"></script>
 </body>
 </html>
-
-<div id="scoreboardView" style="display:none; text-align:center; color:white; padding:20px;">
-  <h2>Top Scores</h2>
-  <div id="leaderboard"></div>
-  <button id="backToMenuButton">Back</button>
-</div>
