@@ -13,6 +13,12 @@
       <h1>Hyperdrop</h1>
       <input type="text" id="playerName" placeholder="Enter your name" />
       <button id="startBtn">Start Game</button>
+      <button id="viewLeaderboardBtn">View Leaderboard</button>
+    </div>
+    <div id="leaderboardScreen" class="overlay" style="display:none;">
+      <h2>Leaderboard</h2>
+      <ol id="leaderboardList"></ol>
+      <button onclick="closeLeaderboard()">Back</button>
     </div>
     <canvas id="game" width="300" height="600"></canvas>
     <div id="scoreboard">
