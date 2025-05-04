@@ -154,8 +154,10 @@ function endGame() {
 }
 
 
+
 document.addEventListener("keydown", e => {
   if (!gameRunning) return;
+
   if (e.key === "ArrowLeft") {
     currentPiece.x--;
     if (collide(currentPiece)) currentPiece.x++;
@@ -174,7 +176,7 @@ document.addEventListener("keydown", e => {
         endGame();
       }
     }
-    lastDrop = Date.now(); // reset fall timer
+    lastDrop = Date.now();
   } else if (e.key === "ArrowUp" || e.key === " ") {
     const rotated = rotate(currentPiece.shape);
     const prev = currentPiece.shape;
@@ -182,6 +184,7 @@ document.addEventListener("keydown", e => {
     if (collide(currentPiece)) currentPiece.shape = prev;
   }
 });
+
 
 
 document.getElementById("startBtn").addEventListener("click", () => {
