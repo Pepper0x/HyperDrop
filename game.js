@@ -222,3 +222,57 @@ document.getElementById("backBtn").onclick = () => {
   document.getElementById("scoreboard").style.display = "none";
   canvas.style.display = "none";
 };
+
+
+function showGameOverPopup() {
+  const popup = document.createElement("div");
+  popup.id = "gameOverPopup";
+  popup.style.position = "absolute";
+  popup.style.top = "50%";
+  popup.style.left = "50%";
+  popup.style.transform = "translate(-50%, -50%)";
+  popup.style.background = "rgba(0, 0, 0, 0.8)";
+  popup.style.color = "#fff";
+  popup.style.padding = "20px";
+  popup.style.border = "2px solid #fff";
+  popup.style.borderRadius = "10px";
+  popup.style.textAlign = "center";
+  popup.style.zIndex = "100";
+
+  popup.innerHTML = \`
+    <h2>Game Over</h2>
+    <p>Your score: \${score}</p>
+    <button id="mainMenuBtn">Main Menu</button>
+    <button id="viewScoreboardBtn">View Leaderboard</button>
+  \`;
+
+  document.body.appendChild(popup);
+
+  document.getElementById("mainMenuBtn").onclick = () => {
+    popup.remove();
+    document.getElementById("menu").style.display = "block";
+    canvas.style.display = "none";
+    scoreList.innerHTML = getTopScoresHTML();
+  };
+
+  document.getElementById("viewScoreboardBtn").onclick = () => {
+    popup.remove();
+    document.getElementById("scoreboard").style.display = "block";
+    canvas.style.display = "none";
+    scoreList.innerHTML = getTopScoresHTML();
+  };
+
+  saveScore(usernameInput.value || "Player", score);
+}
+
+let topScores = [];
+
+function saveScore(name, score) {
+  topScores.push({ name, score });
+  topScores.sort((a, b) => b.score - a.score);
+  if (topScores.length > 10) topScores.length = 10;
+}
+
+function getTopScoresHTML() {
+  return topScores.map(s => \`<li>\${s.name}: \${s.score}</li>\`).join("");
+}
