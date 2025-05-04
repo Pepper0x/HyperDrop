@@ -240,3 +240,9 @@ backBtn.onclick = () => {
   menu.style.display = "block";
   scoreboard.style.display = "none";
 };
+
+
+function rotatePiece() {
+  if (!gameRunning) return;
+  currentPiece.shape = rotate(currentPiece.shape);
+}

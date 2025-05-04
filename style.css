@@ -102,3 +102,20 @@ ul {
   text-align: center;
   z-index: 50;
 }
+
+#touchControls {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+#touchControls button {
+  padding: 10px 14px;
+  font-size: 20px;
+  border-radius: 8px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
