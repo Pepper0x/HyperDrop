@@ -57,14 +57,21 @@ function drawBoard() {
 }
 
 
+
 function drawPiece(piece) {
   for (let r = 0; r < piece.shape.length; r++) {
     for (let c = 0; c < piece.shape[r].length; c++) {
       if (piece.shape[r][c]) {
-        const drawY = piece.y + r;
-        if (drawY >= 0 && drawY < rows) {
-          ctx.drawImage(images[piece.type], (piece.x + c) * grid, drawY * grid, grid, grid);
+        let y = piece.y + r;
+        let x = piece.x + c;
+        if (y >= 0 && y < rows && x >= 0 && x < cols) {
+          ctx.drawImage(images[piece.type], x * grid, y * grid, grid, grid);
         }
+      }
+    }
+  }
+}
+
       }
     }
   }
