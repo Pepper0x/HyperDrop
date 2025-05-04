@@ -153,6 +153,7 @@ function endGame() {
   window.location.reload();
 }
 
+
 document.addEventListener("keydown", e => {
   if (!gameRunning) return;
   if (e.key === "ArrowLeft") {
@@ -162,7 +163,18 @@ document.addEventListener("keydown", e => {
     currentPiece.x++;
     if (collide(currentPiece)) currentPiece.x--;
   } else if (e.key === "ArrowDown") {
-    drop();
+    currentPiece.y++;
+    if (collide(currentPiece)) {
+      currentPiece.y--;
+      merge(currentPiece);
+      clearLines();
+      currentPiece = nextPiece();
+      if (collide(currentPiece)) {
+        gameRunning = false;
+        endGame();
+      }
+    }
+    lastDrop = Date.now(); // reset fall timer
   } else if (e.key === "ArrowUp" || e.key === " ") {
     const rotated = rotate(currentPiece.shape);
     const prev = currentPiece.shape;
@@ -170,6 +182,7 @@ document.addEventListener("keydown", e => {
     if (collide(currentPiece)) currentPiece.shape = prev;
   }
 });
+
 
 document.getElementById("startBtn").addEventListener("click", () => {
   const nameInput = document.getElementById("playerName");
