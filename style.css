@@ -1,35 +1,44 @@
 
 body {
   margin: 0;
+  background-color: #000;
   font-family: sans-serif;
-  background-color: #111;
-  color: #fff;
-}
-canvas {
-  display: block;
-  background: #000;
-}
-.overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.9);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  height: 100vh;
+  overflow: hidden;
 }
-.hidden { display: none; }
+
+.game-wrapper {
+  position: relative;
+  width: 300px;
+  height: 600px;
+  background-image: url('assets/hyperdrop_background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 #nextPieceBox {
   position: absolute;
-  right: 20px;
-  top: 20px;
+  top: 5px;
+  left: 5px;
   color: white;
-  text-align: center;
+  text-align: left;
+  z-index: 2;
+  background: rgba(0,0,0,0.6);
+  padding: 5px;
+  border-radius: 4px;
 }
+
 #nextCanvas {
   border: 1px solid white;
   background: #000;
