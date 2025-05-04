@@ -119,3 +119,7 @@ ul {
   border: none;
   cursor: pointer;
 }
+
+body, html {
+  touch-action: manipulation;
+}
