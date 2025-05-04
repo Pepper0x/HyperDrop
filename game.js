@@ -1,10 +1,21 @@
 
+function drawNextPiece() {
+  const offsetX = canvas.width - 96;
+  const offsetY = 10;
+  nextPiece.shape.forEach((row, y) => {
+    row.forEach((val, x) => {
+      if (val) ctx.drawImage(images[nextPiece.type], offsetX + x * 20, offsetY + y * 20, 20, 20);
+    });
+  });
+}
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const BLOCK_SIZE = 32;
 const COLS = 10;
 const ROWS = 20;
+const PLAYABLE_ROWS = 19;
 
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
@@ -109,12 +120,13 @@ function update(time = 0) {
   const delta = time - lastTime;
   lastTime = time;
   dropCounter += delta;
-  if (dropCounter > dropInterval) {
+  if (dropCounter > dropInterval && currentPiece.y + currentPiece.shape.length < PLAYABLE_ROWS) {
     drop();
   }
   drawBoard();
   drawMatrix(currentPiece.shape, { x: currentPiece.x, y: currentPiece.y }, currentPiece.type);
-  if (gameRunning) requestAnimationFrame(update);
+  if (gameRunning) drawNextPiece();
+  requestAnimationFrame(update);
 }
 
 function drop() {
