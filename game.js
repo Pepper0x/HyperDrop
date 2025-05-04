@@ -9,9 +9,9 @@ canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
 let board = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
-let pieceImages = {
-  I: 'assets/I.png', J: 'assets/J.png', L: 'assets/L.png',
-  O: 'assets/O.png', S: 'assets/S.png', T: 'assets/T.png', Z: 'assets/Z.png'
+let colors = {
+  I: 'cyan', J: 'blue', L: 'orange',
+  O: 'yellow', S: 'lime', T: 'purple', Z: 'red'
 };
 let pieces = {
   I: [[1,1,1,1]], J: [[1,0,0],[1,1,1]], L: [[0,0,1],[1,1,1]],
@@ -32,9 +32,10 @@ function newPiece() {
 }
 
 function drawBlock(x, y, type) {
-  const img = new Image();
-  img.src = pieceImages[type];
-  img.onload = () => ctx.drawImage(img, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+  ctx.fillStyle = colors[type];
+  ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+  ctx.strokeStyle = "black";
+  ctx.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 }
 
 function draw() {
