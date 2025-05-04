@@ -56,45 +56,18 @@ function drawBoard() {
   }
 }
 
+
 function drawPiece(piece) {
   for (let r = 0; r < piece.shape.length; r++) {
     for (let c = 0; c < piece.shape[r].length; c++) {
       if (piece.shape[r][c]) {
-        ctx.drawImage(images[piece.type], (piece.x + c) * grid, (piece.y + r) * grid, grid, grid);
-      }
-    }
-  }
-}
-
-function merge(piece) {
-  piece.shape.forEach((row, dy) => {
-    row.forEach((val, dx) => {
-      if (val) {
-        const x = piece.x + dx;
-        const y = piece.y + dy;
-        if (y >= 0) board[y][x] = piece.type;
-      }
-    });
-  });
-}
-
-function collide(piece) {
-  for (let r = 0; r < piece.shape.length; r++) {
-    for (let c = 0; c < piece.shape[r].length; c++) {
-      if (piece.shape[r][c]) {
-        const x = piece.x + c;
-        const y = piece.y + r;
-        if (y >= rows || x < 0 || x >= cols || (y >= 0 && board[y][x])) {
-          return true;
+        const drawY = piece.y + r;
+        if (drawY >= 0 && drawY < rows) {
+          ctx.drawImage(images[piece.type], (piece.x + c) * grid, drawY * grid, grid, grid);
         }
       }
     }
   }
-  return false;
-}
-
-function rotate(matrix) {
-  return matrix[0].map((_, i) => matrix.map(row => row[i]).reverse());
 }
 
 function drop() {
@@ -108,6 +81,10 @@ function drop() {
       gameRunning = false;
       endGame();
     }
+  }
+  lastDrop = Date.now();
+}
+
   }
   lastDrop = Date.now();
 }
