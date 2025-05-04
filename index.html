@@ -1,31 +1,29 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
   <title>Hyperdrop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="game-wrapper">
-    <div id="startScreen" class="overlay">
+  <div id="homeScreen" class="overlay">
+    <div class="popup">
       <h1>Hyperdrop</h1>
       <input type="text" id="playerName" placeholder="Enter your name" />
-      <button id="startBtn">Start Game</button>
-      <button id="viewLeaderboardBtn">View Leaderboard</button>
-    </div>
-    <div id="leaderboardScreen" class="overlay" style="display:none;">
-      <h2>Leaderboard</h2>
-      <ol id="leaderboardList"></ol>
-      <button onclick="closeLeaderboard()">Back</button>
-    </div>
-    <canvas id="game" width="300" height="600"></canvas>
-    <div id="scoreboard">
-      <span id="score">Score: 0</span>
-      <span id="level">Level: 1</span>
+      <button onclick="startGame()">Start Game</button>
+      <button onclick="showLeaderboard()">View Leaderboard</button>
     </div>
   </div>
+
+  <div id="leaderboardScreen" class="overlay hidden">
+    <div class="popup">
+      <h2>Top Scores</h2>
+      <ul id="leaderboard"></ul>
+      <button onclick="goHome()">Main Menu</button>
+    </div>
+  </div>
+
+  <canvas id="gameCanvas" width="320" height="640"></canvas>
   <script src="game.js"></script>
 </body>
 </html>
