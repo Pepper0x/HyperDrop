@@ -148,19 +148,12 @@ function drawMatrix(matrix, offset) {
   });
 }
 
+
 function drawBackground() {
-  context.fillStyle = "#000";
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  context.strokeStyle = "#333";
-  for (let y = 0; y < ROWS; y++) {
-    for (let x = 0; x < COLS; x++) {
-      context.strokeRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-    }
-  }
-  context.fillStyle = "#111";
-  context.fillRect(0, canvas.height - 30, canvas.width, 30);
-  context.fillStyle = "#fff";
-  context.fillText("Score: " + score + "  Level: " + level, 10, canvas.height - 10);
+  const bg = new Image();
+  bg.src = 'assets/hyperdrop_background.png';
+  context.drawImage(bg, 0, 0, canvas.width, canvas.height);
+}
 }
 
 function drawNextPiece() {
@@ -249,7 +242,7 @@ document.addEventListener("keydown", event => {
     merge(arena, player);
     playerReset();
     dropCounter = 0;
-  } else if (event.code === "Space") {
+  } else if (event.key === " " || event.code === "Space") {
     playerRotate(1);
   }
 });
