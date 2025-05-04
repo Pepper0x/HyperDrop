@@ -277,3 +277,20 @@ bindControl("btnRight", () => move(1));
 bindControl("btnRotate", () => rotatePiece());
 bindControl("btnSoftDrop", () => drop());
 bindControl("btnHardDrop", () => hardDrop());
+
+// Start menu and leaderboard logic
+function startGame() {
+  document.getElementById("startScreen").classList.add("hidden");
+  gameInit();
+}
+function showLeaderboard() {
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("leaderboardScreen").classList.remove("hidden");
+  const scores = JSON.parse(localStorage.getItem("scores") || "[]").slice(0, 10);
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = scores.map(s => `<li>${s.name}: ${s.score}</li>`).join('');
+}
+function hideLeaderboard() {
+  document.getElementById("leaderboardScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
+}

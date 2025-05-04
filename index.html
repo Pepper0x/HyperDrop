@@ -7,6 +7,16 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="startScreen" class="overlay">
+    <h1>Hyperdrop</h1>
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="showLeaderboard()">View Leaderboard</button>
+  </div>
+  <div id="leaderboardScreen" class="overlay hidden">
+    <h2>Top Scores</h2>
+    <ol id="leaderboardList"></ol>
+    <button onclick="hideLeaderboard()">Back</button>
+  </div>
 <div id="gameWrapper">
   <div id="container">
     <div id="menu">
