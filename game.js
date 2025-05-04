@@ -52,7 +52,12 @@ function createPiece(type) {
 function collide(board, piece) {
   const { shape, x: px, y: py } = piece;
   return shape.some((row, y) =>
-    row.some((val, x) => val && (board[y + py] && board[y + py][x + px]) !== null)
+    row.some((val, x) => {
+      if (!val) return false;
+      const newY = y + py;
+      const newX = x + px;
+      return newY >= PLAYABLE_ROWS || board[newY] && board[newY][newX] !== null;
+    })
   );
 }
 
@@ -130,7 +135,7 @@ function update(time = 0) {
 
 function drop() {
   currentPiece.y++;
-  if (collide(board, currentPiece) || currentPiece.y + currentPiece.shape.length > PLAYABLE_ROWS) {
+  if (collide(board, currentPiece) || currentPiece.y + currentPiece.shape.length >= PLAYABLE_ROWS) {
     currentPiece.y--;
     merge(board, currentPiece);
     clearRows();
