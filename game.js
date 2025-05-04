@@ -203,3 +203,59 @@ function gameInit() {
   playerReset();
   update();
 }
+
+
+const pieceImages = {
+  1: new Image(),
+  2: new Image(),
+  3: new Image(),
+  4: new Image(),
+  5: new Image(),
+  6: new Image(),
+  7: new Image(),
+};
+
+pieceImages[1].src = 'assets/I.png';
+pieceImages[2].src = 'assets/J.png';
+pieceImages[3].src = 'assets/L.png';
+pieceImages[4].src = 'assets/O.png';
+pieceImages[5].src = 'assets/S.png';
+pieceImages[6].src = 'assets/T.png';
+pieceImages[7].src = 'assets/Z.png';
+
+function drawMatrix(matrix, offset) {
+  matrix.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== 0) {
+        const img = pieceImages[value];
+        context.drawImage(
+          img,
+          (x + offset.x) * BLOCK_SIZE,
+          (y + offset.y) * BLOCK_SIZE,
+          BLOCK_SIZE,
+          BLOCK_SIZE
+        );
+      }
+    });
+  });
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key === "ArrowLeft") {
+    playerMove(-1);
+  } else if (event.key === "ArrowRight") {
+    playerMove(1);
+  } else if (event.key === "ArrowDown") {
+    playerDrop();
+  } else if (event.key === "ArrowUp") {
+    while (!collide(arena, player)) {
+      player.pos.y++;
+    }
+    player.pos.y--;
+    merge(arena, player);
+    playerReset();
+    dropCounter = 0;
+  } else if (event.code === "Space") {
+    playerRotate(1);
+  }
+});
