@@ -33,7 +33,4 @@
     </div>
     <canvas id="canvas"></canvas>
   </div>
-  <script src="stats.js"></script>
-  <script src="tetris.js"></script>
-</body>
-</html>
+  <script src="stats.js">
